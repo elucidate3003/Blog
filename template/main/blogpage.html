@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+  {% block style %}
+  <style>
+  *{
+      background:#2b2b2a;
+      
+  }
+  h2 a{
+        color:pink;
+    }
+  </style> 
+  {% endblock style %}
+  {% block title %} <title>Home</title>{% endblock title %}
+
+  {% block content %}
+
+<div class="row">
+   
+    <div class="article mt-5 col-md-8 ">
+    {% for blog in blogs %}
+    <h2 class="mb-2"><a href="{% url 'each_article' blog.slug %}">{{blog.title}}</a></h2>
+    <h5 style="font-size:14px;background-color:black;color:white">{{blog.published_on}}&nbsp;&nbsp;&nbsp;&nbsp;{{blog.genre|title}}&nbsp;&nbsp;&nbsp;&nbsp;{{blog.author}}</h5>
+    {% comment %} <p id="blog-{{blog.id}}"></p><button class="btn btn-dark" onclick=show({{blog.id}})>Read More..</button> {% endcomment %}
+    <hr color="red">
+    {% endfor %}
+    
+</div>
+    
+<div class="col-md-4"></div>
+ </div>
+ 
+<script>
+const paras = document.querySelectorAll('.blog p');
+let minText = 140
+paras.forEach(para => {
+    para.textContent = para.textContent.slice(0, 140)
+})
+const show = (id) => {
+    let para = document.querySelector('#blog-{{blog.id}}')
+    console.log(id)
+    if (minText == 140){
+        para.textContent = para.textContent.slice(0, )
+    }
+}
+
+
+</script>
+{% endblock content %}
+

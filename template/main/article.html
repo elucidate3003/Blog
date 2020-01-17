@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load humanize %}
+{% load static %}
+{% block style %}
+    <style>
+    *{
+        background:#f0ece4;
+        color:red;
+    }
+    
+    </style>
+{% endblock style %}
+
+
+{% block title %}
+<title> {{article.title}}</title>
+{% endblock title %}
+
+{% block content %}
+    <h1 class="text-muted text-center mt-5">{{article.title}} </h1>
+<div class="">
+    <div class="text-center">
+        <span class="mr-3"> <i class="far fa-clock" aria-hidden="true"></i>{{article.published_on|naturaltime}}</span>
+        <span  class="mr-3"><i class="fa fa-pencil-square" aria-hidden="true"></i>{{article.author}}</span>
+        <span  class="mr-3"><i class="fa fa-cog fa-spin fa-3x fa-fw"></i>&nbsp;{{article.genre|title}}</span>
+        <div class="image my-5">
+            {% if article.title_image %}
+            <img src="{{article.title_image.url}}" alt="">
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="content mx-auto " style="max-width: 800px;">
+        {{article.body|safe}}
+    </div>
+        
+</div>
+{% endblock content %}

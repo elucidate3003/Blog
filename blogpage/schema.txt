@@ -1,0 +1,7 @@
+title :char(250)
+author : char(100)
+content : text
+created_on : datetime
+genre : char(20) ->choices
+title_image : image
+

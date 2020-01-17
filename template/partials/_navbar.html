@@ -1,0 +1,122 @@
+{% block style %}
+<head><script src="https://kit.fontawesome.com/e76d965be7.js" crossorigin="anonymous"></script></head>
+<style>
+.right{
+    margin:10px 15px 15px 1000px;
+}
+hr{
+    background:pink;
+}
+
+li{
+ display:inline;   
+}
+i{
+    color:#fff000;
+}
+a{
+    color:#e11111;
+}
+
+</style>
+{% endblock style %}
+
+
+<nav>
+<div class="row">
+<div class="article col-9">
+ <span class="logo"><h2><i class="fa fa-microchip" aria-hidden="true">&nbsp;Hoolahoop</h2></i></span>
+ 
+    <div class="menu my-8 py-3">
+        <ul class="d-flex list-unstyled mx-2">
+            <li class="mr-3"><a href="{% url 'index' %}">Home</a></li>
+            <li class="mr-3"><a href="{% url 'about' %}">About</a></li>
+            <li class="mr-3"><a href="{% url 'contact' %}">Contact Us</a></li>
+            {% if user.username %}
+            <li class="mr-3"><a href="{% url 'admin:logout' %}">Sign out</a></li>
+            {% else %}
+            <li class="mr-3"><a href="{% url 'admin:login' %}">Sign in</a></li>
+            {% endif %}
+        </ul>
+        <hr size="4px" >
+        <div class="right col-3">
+        <form method="POST" action="{% url 'search_article' %}" class="">
+        {% csrf_token %}
+        <div class="input-group bg-light" style="border-radius:40px;">
+        
+            <input autocomplete="off" type="text" class="form-control form-control-lg shadow-none border-0" style="background:none;" id="search-text" name="searched">
+            <span class="input-group-append text-dark d-flex align-items-center">
+                <button type="submit" style="background:none;" class="border-0">
+                    <i class="fa fa-search mr-2" style="font-size:25px;"></i>
+                </button>
+            </span>
+            
+        </div>
+            <div class="result mt-2 ">
+                <ul class="results list-group">
+
+                </ul>
+            </div>
+        </form>
+    </div>
+    </div>
+    </div>
+</nav>
+
+{% block content %}
+
+<script>
+//autocomplete
+const searchField = document.querySelector("#search-text");
+const results = document.querySelector(".results");
+const render = datas => {
+  let html = datas
+    .map(data => {
+      return `<li class="card">
+        <div>${data.title}</div>
+        <small>${data.writer}</small>
+      </li>`;}).join("");
+  results.innerHTML = html;
+  console.log(html);
+};
+
+const getData = async txt => {
+  const response = await fetch("{% url 'search_api' %}");
+  const datas = await response.json();
+
+  //   return datas;
+  const filteredData = await datas.filter(data => {
+  const regex = new RegExp(`^${txt}`, "ig");
+    if (data.title.match(regex) || data.writer.match(regex)) {
+      return true;
+    }
+  });
+  return filteredData;
+};
+
+searchField.addEventListener("keyup", e => {
+  const searchText = searchField.value;
+  getData(searchText).then(data => render(data)).catch(err => console.log(err));
+
+  if (searchText === "" || searchText === null) {
+    results.innerHTML = "";
+  }
+});
+
+{% comment %} const render = async txt => {
+    const response = await fetch("{% url 'search_api' %}")
+    const data = response.json()
+    return data
+};
+
+searchField.addEventListener("keyup", e => {
+  const searchText = searchField.value;
+
+  render(searchText).then(data => console.log(JSON.parse(data)));
+}); {% endcomment %}
+
+
+
+</script>
+
+{% endblock content %}

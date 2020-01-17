@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block style %}
+
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.6.0/dist/leaflet.css"
+   integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ=="
+   crossorigin=""/>
+
+   <script src="https://unpkg.com/leaflet@1.6.0/dist/leaflet.js"
+   integrity="sha512-gZwIG9x3wUXg2hdXF6+rVkLF/0Vi9U8D2Ntg4Ga5I5BZpVkVxlJWbSQtXPSiUTtC0TjtGOmxa1AJPuV0CPthew=="
+   crossorigin=""></script>
+
+    <style>
+        #mymap {
+            height: 350px;
+        }
+    </style>
+
+{% endblock style %}
+
+{% block content %}
+<div class="row">
+    <div class="col-8">
+    <h1 class="">Contact Us</h1>
+    
+
+    <address class="mx-4 my-4">
+       <strong>Hoolahoop, Inc. </strong><br>
+        Church Street<br>
+        Bangalore, KA 560094<br>
+        P: (123) 456-7890<br>
+    </address>
+
+    <div id="mymap"></div>
+
+    </div>
+</div>
+
+    <script>
+        
+        const accessToken = 'pk.eyJ1IjoiYW1iaHJhbmkiLCJhIjoiY2s1MGZyaXZwMGp6NDNlc2FwZHZhNDV5NiJ9.Yn3jeiBp2nkPcjxfP0Qy-Q'
+        const mymap = L.map('mymap').setView([13, -15], 13);
+        L.tileLayer(`https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=${accessToken}`, {
+        attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors, <a href="https://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+        maxZoom: 18,
+        id: 'mapbox/satellite-v9',
+        accessToken: 'your.mapbox.access.token'
+    }).addTo(mymap);
+        const gotPos = function(position){
+            const lat = position.coords.latitude
+            const long = position.coords.longitude
+            mymap.setView([lat, long])
+            var circle = L.circle([lat, long], {
+            color: 'yellow',
+            fillColor: 'yellow',
+            fillOpacity: 0.5,
+            radius: 500
+            }).addTo(mymap);;
+        }
+        const gotErr = function(err){
+            console.log(err)
+        }
+        if(navigator.geolocation){
+            navigator.geolocation.getCurrentPosition(gotPos, gotErr)
+        }
+    </script>
+
+{% endblock content %}
